@@ -1,0 +1,199 @@
+/* ── AboutPage.css ─────────────────────────────────────────── */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Lora:ital@0;1&family=Space+Mono:wght@400;700&display=swap");
+
+.about-page {
+  min-height: calc(100vh - 65px);
+  background: #09090e;
+  color: #f0ece4;
+  font-family: "Lora", serif;
+  padding-bottom: 5rem;
+}
+
+/* ── Hero ── */
+.about-hero {
+  position: relative;
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.about-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(250, 204, 21, 0.07) 0%, transparent 70%),
+    linear-gradient(180deg, #12121a 0%, #09090e 100%);
+  z-index: 0;
+}
+
+.about-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.about-eyebrow {
+  font-family: "Space Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(250, 204, 21, 0.6);
+  margin: 0;
+}
+
+.about-title {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  margin: 0;
+  color: #f0ece4;
+}
+
+.about-accent {
+  font-style: italic;
+  color: #facc15;
+}
+
+.about-desc {
+  font-size: 0.95rem;
+  line-height: 1.8;
+  color: rgba(240, 236, 228, 0.55);
+  font-style: italic;
+  margin: 0;
+}
+
+/* ── Sections ── */
+.about-section {
+  max-width: 900px;
+  margin: 3rem auto 0;
+  padding: 0 1.5rem;
+}
+
+.section-title {
+  font-family: "Playfair Display", serif;
+  font-size: 1.4rem;
+  color: #f0ece4;
+  margin: 0 0 1.5rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ── Tech Grid ── */
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.tech-card {
+  background: #0f0f16;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 1.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.tech-card:hover {
+  border-color: rgba(250, 204, 21, 0.3);
+  transform: translateY(-3px);
+}
+
+.tech-icon {
+  font-size: 1.6rem;
+}
+
+.tech-card strong {
+  font-family: "Space Mono", monospace;
+  font-size: 0.78rem;
+  color: #facc15;
+}
+
+.tech-card span {
+  font-size: 0.78rem;
+  color: rgba(240, 236, 228, 0.4);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* ── Team Grid ── */
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.2rem;
+}
+
+.member-card {
+  background: #0f0f16;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 1.8rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.member-card:first-child {
+  border-color: rgba(250, 204, 21, 0.3);
+  background: linear-gradient(135deg, #0f0f16, #141420);
+}
+
+.member-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(250, 204, 21, 0.4);
+}
+
+.member-emoji {
+  font-size: 2rem;
+}
+
+.member-name {
+  font-family: "Playfair Display", serif;
+  font-size: 1.05rem;
+  color: #f0ece4;
+  margin: 0;
+}
+
+.member-role {
+  font-family: "Space Mono", monospace;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #facc15;
+  margin: 0;
+}
+
+.member-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+
+.member-meta span {
+  font-family: "Space Mono", monospace;
+  font-size: 0.7rem;
+  color: rgba(240, 236, 228, 0.35);
+  word-break: break-all;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .about-hero {
+    padding: 3.5rem 1.2rem 3rem;
+  }
+
+  .tech-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
