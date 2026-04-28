@@ -45,6 +45,27 @@
   margin: 0 0 1rem;
 }
 
+.method-tabs {
+  display: flex;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #2a2a31;
+}
+
+.method-tabs button {
+  width: 50%;
+  background: transparent;
+  border: none;
+  color: #777;
+  padding: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.method-tabs button.active-tab {
+  color: white;
+  border-bottom: 3px solid white;
+}
+
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -88,6 +109,37 @@
   box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.08);
 }
 
+.phone-row {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d3b83f;
+  border-radius: 8px;
+  background: #191920;
+  overflow: hidden;
+}
+
+.phone-row input {
+  border: none;
+  flex: 1;
+}
+
+.country-code {
+  color: white;
+  padding-left: 12px;
+  font-size: 14px;
+}
+
+.switch-method {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #ffd21f;
+  font-weight: bold;
+  margin: 10px 0 20px;
+  cursor: pointer;
+}
+
+
 .auth-btn {
   margin-top: 0.5rem;
   padding: 0.85rem;
@@ -111,6 +163,18 @@
 
 .auth-btn:active {
   transform: translateY(0);
+}
+
+.forgot-password {
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: rgba(240, 236, 228, 0.35);
+}
+
+.forgot-password:hover {
+  color: #ffd21f;
+  transform: translateY(-2px);
 }
 
 .auth-switch {
