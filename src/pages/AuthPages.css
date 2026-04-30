@@ -129,15 +129,7 @@
   font-size: 14px;
 }
 
-.switch-method {
-  width: 100%;
-  background: transparent;
-  border: none;
-  color: #ffd21f;
-  font-weight: bold;
-  margin: 10px 0 20px;
-  cursor: pointer;
-}
+
 
 
 .auth-btn {
@@ -194,4 +186,19 @@
 
 .auth-switch a:hover {
   text-decoration: underline;
+}
+
+.form-transition {
+  animation: fadeSlide 0.3s ease;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -46,7 +46,9 @@ function LoginPage() {
           </button>
         </div>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
+      <form className="auth-form" onSubmit={handleSubmit}>
+
+        <div key={loginMethod} className="form-transition">
           {loginMethod === "email" ? (
             <div className="form-group">
               <label>Email</label>
@@ -87,19 +89,9 @@ function LoginPage() {
               required
             />
           </div>
+         </div>
 
-          <button
-            type="button"
-            className="switch-method"
-            onClick={() =>
-              setLoginMethod(loginMethod === "email" ? "phone" : "email")
-            }
-          >
-            {loginMethod === "email"
-              ? "USE PHONE INSTEAD"
-              : "USE EMAIL INSTEAD"}
-          </button>
-
+          
           <button type="submit" className="auth-btn">
             Sign In
           </button>
