@@ -1,27 +1,10 @@
 import "./AboutPage.css";
 
 const teamMembers = [
-  {
-    name: "Bashar Tummalieh",
-    id: "2232140",
-    email: "zahybashar098@gmail.com",
-    role: "Main Page & Movie Display",
-    emoji: "🎬",
-  },
-  {
-    name: "Team Member 2",
-    id: "———",
-    email: "———",
-    role: "Login & Register Pages",
-    emoji: "🔐",
-  },
-  {
-    name: "Team Member 3",
-    id: "———",
-    email: "———",
-    role: "Header & Navigation",
-    emoji: "🧭",
-  },
+  { name: "Bashar Tummalieh", id: "2232140", emoji: "🎬" },
+  { name: "Zaid Osama Ajami", id: "2232362", emoji: "🎬" },
+  { name: "Rana Ibrahim Shari", id: "2333040", emoji: "🎬" },
+  { name: "Maria Malek Almomani", id: "2338946", emoji: "🎬" },
 ];
 
 function AboutPage() {
@@ -70,10 +53,8 @@ function AboutPage() {
             <div className="member-card" key={m.name}>
               <div className="member-emoji">{m.emoji}</div>
               <h3 className="member-name">{m.name}</h3>
-              <p className="member-role">{m.role}</p>
               <div className="member-meta">
                 <span>🪪 {m.id}</span>
-                <span>✉️ {m.email}</span>
               </div>
             </div>
           ))}
