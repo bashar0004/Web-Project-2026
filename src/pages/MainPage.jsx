@@ -61,13 +61,13 @@ function MainPage() {
       <header className="hero">
         <div className="hero-bg" />
         <div className="hero-content">
-          <p className="hero-eyebrow">🎬 Curated Cinema</p>
+        
           <h1 className="hero-title">
             Find Your Next<br />
             <span className="hero-accent">Favourite Film</span>
           </h1>
           <p className="hero-sub">
-            Explore {movies.length} handpicked movies — filter, search, and discover.
+          
           </p>
         </div>
       </header>
