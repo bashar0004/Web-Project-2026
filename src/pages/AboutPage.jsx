@@ -17,13 +17,27 @@ function AboutPage() {
           <p className="about-eyebrow">Web Applications Project — 2026</p>
           <h1 className="about-title">About <span className="about-accent">CineRate</span></h1>
           <p className="about-desc">
-            CineRate is a front-end web application built with React.js as part of our
-            Web Applications Programming and Engineering course. It allows users to
-            browse, search, filter, and sort a curated collection of movies — all
-            powered by client-side logic and a clean, cinematic UI.
+            CineRate is a web Application that allows the users to
+            browse, search, filter, and sort a curated collection of movies 
           </p>
         </div>
       </div>
+      
+      {/* Team */}
+      <section className="about-section">
+        <h2 className="section-title">👥 Our Team</h2>
+        <div className="team-grid">
+          {teamMembers.map((m) => (
+            <div className="member-card" key={m.name}>
+              <div className="member-emoji">{m.emoji}</div>
+              <h3 className="member-name">{m.name}</h3>
+              <div className="member-meta">
+                <span>🪪 {m.id}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Project Info */}
       <section className="about-section">
@@ -45,21 +59,6 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* Team */}
-      <section className="about-section">
-        <h2 className="section-title">👥 Our Team</h2>
-        <div className="team-grid">
-          {teamMembers.map((m) => (
-            <div className="member-card" key={m.name}>
-              <div className="member-emoji">{m.emoji}</div>
-              <h3 className="member-name">{m.name}</h3>
-              <div className="member-meta">
-                <span>🪪 {m.id}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }
