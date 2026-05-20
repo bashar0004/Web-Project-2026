@@ -4,80 +4,72 @@ const teamMembers = [
   {
     name: "Bashar Tummalieh",
     id: "2232140",
-    email: "zahybashar098@gmail.com",
+    email: "zanybashar098@gmail.com",
     role: "Main Page & Movie Display",
     emoji: "🎬",
   },
   {
-    name: "Team Member 2",
-    id: "———",
-    email: "———",
+    name: "Zaid Osama Ajami",
+    id: "2232362",
+    email: "",
     role: "Login & Register Pages",
     emoji: "🔐",
   },
   {
-    name: "Team Member 3",
-    id: "———",
-    email: "———",
+    name: "Rana Ibrahim Shari",
+    id: "2233040",
+    email: "",
     role: "Header & Navigation",
     emoji: "🧭",
+  },
+  {
+    name: "Maria Malek Almomani",
+    id: "2338946",
+    email: "",
+    role: "About Page",
+    emoji: "🎬",
   },
 ];
 
 function AboutPage() {
   return (
     <div className="about-page">
-      {/* Hero */}
-      <div className="about-hero">
-        <div className="about-hero-bg" />
-        <div className="about-hero-content">
-          <p className="about-eyebrow">Web Applications Project — 2026</p>
-          <h1 className="about-title">About <span className="about-accent">CineRate</span></h1>
-          <p className="about-desc">
-            CineRate is a front-end web application built with React.js as part of our
-            Web Applications Programming and Engineering course. It allows users to
-            browse, search, filter, and sort a curated collection of movies — all
-            powered by client-side logic and a clean, cinematic UI.
-          </p>
-        </div>
-      </div>
-
-      {/* Project Info */}
       <section className="about-section">
-        <h2 className="section-title">🛠 Tech Stack</h2>
-        <div className="tech-grid">
-          {[
-            { icon: "⚛️", label: "React.js", desc: "SPA with functional components & hooks" },
-            { icon: "🔀", label: "React Router", desc: "Client-side routing between pages" },
-            { icon: "🎨", label: "CSS Modules", desc: "Custom dark cinematic design system" },
-            { icon: "☁️", label: "Render.com", desc: "Live deployment & hosting" },
-            { icon: "🐙", label: "GitHub", desc: "Version control & team collaboration" },
-          ].map((t) => (
-            <div className="tech-card" key={t.label}>
-              <span className="tech-icon">{t.icon}</span>
-              <strong>{t.label}</strong>
-              <span>{t.desc}</span>
-            </div>
-          ))}
-        </div>
+        <h1 className="about-title">About CineRate</h1>
+
+        <p className="about-text">
+          CineRate is a web application that allows users to browse, search,
+          filter, and sort a curated collection of movies — all powered by
+          client-side logic and a clean, cinematic UI.
+        </p>
       </section>
 
-      {/* Team */}
       <section className="about-section">
         <h2 className="section-title">👥 Our Team</h2>
+
         <div className="team-grid">
           {teamMembers.map((m) => (
             <div className="member-card" key={m.name}>
               <div className="member-emoji">{m.emoji}</div>
               <h3 className="member-name">{m.name}</h3>
               <p className="member-role">{m.role}</p>
+
               <div className="member-meta">
-                <span>🪪 {m.id}</span>
-                <span>✉️ {m.email}</span>
+                <span>🆔 {m.id}</span>
+                {m.email && <span>✉️ {m.email}</span>}
               </div>
             </div>
           ))}
         </div>
+      </section>
+
+      <section className="about-section">
+        <h2 className="section-title">🎞️ Project Info</h2>
+
+        <p className="about-text">
+          The project uses React for the frontend, Express for the backend, and
+          MongoDB for storing movie and user data.
+        </p>
       </section>
     </div>
   );
