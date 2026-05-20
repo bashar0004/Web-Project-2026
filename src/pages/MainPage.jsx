@@ -34,10 +34,8 @@ function MainPage() {
 
   // Check if user is logged in
   useEffect(() => {
-    fetch(`${API}/auth/me`, { credentials: "include" })
-      .then(res => res.ok ? res.json() : null)
-      .then(data => { if (data) setUser(data.user); })
-      .catch(() => {});
+    const stored = localStorage.getItem("user");
+    if (stored) setUser(JSON.parse(stored));
   }, []);
 
   // Fetch movies from backend
@@ -68,6 +66,7 @@ function MainPage() {
   // Handle logout
   async function handleLogout() {
     await fetch(`${API}/auth/logout`, { method: "POST", credentials: "include" });
+    localStorage.removeItem("user");
     setUser(null);
   }
 

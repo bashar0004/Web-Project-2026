@@ -45,7 +45,8 @@ function RegisterPage() {
         return;
       }
 
-      navigate("/");
+      localStorage.setItem("user", JSON.stringify(data.user));
+navigate("/");
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
