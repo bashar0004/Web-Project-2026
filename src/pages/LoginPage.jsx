@@ -1,95 +1,149 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./AuthPages.css";
 
+const API = import.meta.env.VITE_API_URL;
+
 function LoginPage() {
-const [loginMethod, setLoginMethod] = useState("email");
+  const [loginMethod, setLoginMethod] = useState("email");
 
-const [form, setForm] = useState({
-email: "",
-phone: "",
-password: "",
-});
+  const [form, setForm] = useState({
+    email: "",
+    phone: "",
+    password: "",
+  });
 
-function handleChange(e) {
-setForm({ ...form, [e.target.name]: e.target.value });
-}
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-function handleSubmit(e) {
-e.preventDefault();
-alert("Login is not functional yet — coming soon!");
-}
+  const navigate = useNavigate();
 
-return (
-<div className="auth-page">
-<div className="auth-card">
-<div className="auth-logo">🎬 CineRate</div>
+  function handleChange(e) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
+  }
 
-<h2 className="auth-title">Welcome Back</h2>
-<p className="auth-sub">Sign in to your account</p>
+  function formatPhoneForBackend(phone) {
+    const cleaned = phone.replace(/\s+/g, "").replace(/-/g, "");
 
-<div className="method-tabs">
-<button
-type="button"
-className={loginMethod === "email" ? "active-tab" : ""}
-onClick={() => setLoginMethod("email")}
->
-via EMAIL
-</button>
+    if (cleaned.startsWith("0")) return cleaned;
+    if (cleaned.startsWith("7")) return `0${cleaned}`;
+    if (cleaned.startsWith("+962")) return `0${cleaned.slice(4)}`;
 
-<button
-type="button"
-className={loginMethod === "phone" ? "active-tab" : ""}
-onClick={() => setLoginMethod("phone")}
->
-via PHONE
-</button>
-</div>
+    return cleaned;
+  }
 
-      <form className="auth-form" onSubmit={handleSubmit}>
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-        <div key={loginMethod} className="form-transition">
-{loginMethod === "email" ? (
-<div className="form-group">
-<label>Email</label>
-<input
-type="email"
-name="email"
-placeholder="you@example.com"
-value={form.email}
-onChange={handleChange}
-required
-/>
-</div>
-) : (
-<div className="form-group">
-<label>Phone Number</label>
-<div className="phone-row">
-<span className="country-code">🇯🇴 +962</span>
-<input
-type="tel"
-name="phone"
-placeholder="7X XXX XXXX"
-value={form.phone}
-onChange={handleChange}
-required
-/>
-</div>
-</div>
-)}
+    try {
+      const payload =
+        loginMethod === "email"
+          ? {
+              email: form.email,
+              password: form.password,
+            }
+          : {
+              phone: formatPhoneForBackend(form.phone),
+              password: form.password,
+            };
 
-<div className="form-group">
-<label>Password</label>
-<input
-type="password"
-name="password"
-placeholder="••••••••"
-value={form.password}
-onChange={handleChange}
-required
-/>
-</div>
-         </div>
+      const res = await fetch(`${API}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Login failed");
+        return;
+      }
+
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-logo">🎬 CineRate</div>
+
+        <h2 className="auth-title">Welcome Back</h2>
+        <p className="auth-sub">Sign in to your account</p>
+
+        {error && <div className="auth-error">{error}</div>}
+
+        <div className="method-tabs">
+          <button
+            type="button"
+            className={loginMethod === "email" ? "active-tab" : ""}
+            onClick={() => setLoginMethod("email")}
+          >
+            via EMAIL
+          </button>
+
+          <button
+            type="button"
+            className={loginMethod === "phone" ? "active-tab" : ""}
+            onClick={() => setLoginMethod("phone")}
+          >
+            via PHONE
+          </button>
+        </div>
+
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div key={loginMethod} className="form-transition">
+            {loginMethod === "email" ? (
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            ) : (
+              <div className="form-group">
+                <label>Phone Number</label>
+                <div className="phone-row">
+                  <span className="country-code">🇯🇴 +962</span>
+                  <input
+                    type="tel"
+                    name="phone"
+                    placeholder="7X XXX XXXX"
+                    value={form.phone}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="form-group">
+              <label>Password</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
 
           <button
             type="button"
@@ -103,19 +157,19 @@ required
               : "USE EMAIL INSTEAD"}
           </button>
 
-          
-<button type="submit" className="auth-btn">
-Sign In
-</button>
-</form>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
 
-<p className="forgot-password">Forgot password?</p>
+        <p className="forgot-password">Forgot password?</p>
 
-<p className="auth-switch">
-Don't have an account? <Link to="/register">Register here</Link>
-</p>
-</div>
-</div>
-);
+        <p className="auth-switch">
+          Don't have an account? <Link to="/register">Register here</Link>
+        </p>
+      </div>
+    </div>
+  );
 }
+
 export default LoginPage;
