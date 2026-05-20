@@ -2,190 +2,199 @@
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700&family=Lora&family=Space+Mono:wght@400;700&display=swap");
 
 .auth-page {
-  min-height: calc(100vh - 65px);
-  background: #09090e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
+min-height: calc(100vh - 65px);
+background: #09090e;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 2rem 1rem;
 }
 
 .auth-card {
-  background: #0f0f16;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 18px;
-  padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+background: #0f0f16;
+border: 1px solid rgba(255, 255, 255, 0.07);
+border-radius: 18px;
+padding: 2.5rem 2rem;
+width: 100%;
+max-width: 420px;
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
 }
 
 .auth-logo {
-  font-family: "Playfair Display", serif;
-  font-size: 1.2rem;
-  color: #facc15;
-  margin-bottom: 0.5rem;
+font-family: "Playfair Display", serif;
+font-size: 1.2rem;
+color: #facc15;
+margin-bottom: 0.5rem;
 }
 
 .auth-title {
-  font-family: "Playfair Display", serif;
-  font-size: 1.8rem;
-  color: #f0ece4;
-  margin: 0;
+font-family: "Playfair Display", serif;
+font-size: 1.8rem;
+color: #f0ece4;
+margin: 0;
 }
 
 .auth-sub {
-  font-family: "Lora", serif;
-  font-size: 0.88rem;
-  color: rgba(240, 236, 228, 0.4);
-  font-style: italic;
-  margin: 0 0 1rem;
+font-family: "Lora", serif;
+font-size: 0.88rem;
+color: rgba(240, 236, 228, 0.4);
+font-style: italic;
+margin: 0 0 1rem;
 }
 
 .method-tabs {
-  display: flex;
-  margin-bottom: 25px;
-  border-bottom: 1px solid #2a2a31;
+display: flex;
+margin-bottom: 25px;
+border-bottom: 1px solid #2a2a31;
 }
 
 .method-tabs button {
-  width: 50%;
-  background: transparent;
-  border: none;
-  color: #777;
-  padding: 12px;
-  font-weight: bold;
-  cursor: pointer;
+width: 50%;
+background: transparent;
+border: none;
+color: #777;
+padding: 12px;
+font-weight: bold;
+cursor: pointer;
 }
 
 .method-tabs button.active-tab {
-  color: white;
-  border-bottom: 3px solid white;
+color: white;
+border-bottom: 3px solid white;
 }
 
 .auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
-  margin-top: 0.5rem;
+display: flex;
+flex-direction: column;
+gap: 1.1rem;
+margin-top: 0.5rem;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+display: flex;
+flex-direction: column;
+gap: 0.4rem;
 }
 
 .form-group label {
-  font-family: "Space Mono", monospace;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(240, 236, 228, 0.5);
+font-family: "Space Mono", monospace;
+font-size: 0.7rem;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+color: rgba(240, 236, 228, 0.5);
 }
 
 .form-group input {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  color: #f0ece4;
-  font-family: "Lora", serif;
-  font-size: 0.92rem;
-  outline: none;
-  transition: border-color 0.25s, box-shadow 0.25s;
+background: rgba(255, 255, 255, 0.04);
+border: 1px solid rgba(255, 255, 255, 0.1);
+border-radius: 10px;
+padding: 0.75rem 1rem;
+color: #f0ece4;
+font-family: "Lora", serif;
+font-size: 0.92rem;
+outline: none;
+transition: border-color 0.25s, box-shadow 0.25s;
 }
 
 .form-group input::placeholder {
-  color: rgba(255, 255, 255, 0.2);
-  font-style: italic;
+color: rgba(255, 255, 255, 0.2);
+font-style: italic;
 }
 
 .form-group input:focus {
-  border-color: rgba(250, 204, 21, 0.5);
-  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.08);
+border-color: rgba(250, 204, 21, 0.5);
+box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.08);
 }
 
 .phone-row {
-  display: flex;
-  align-items: center;
-  border: 1px solid #d3b83f;
-  border-radius: 8px;
-  background: #191920;
-  overflow: hidden;
+display: flex;
+align-items: center;
+border: 1px solid #d3b83f;
+border-radius: 8px;
+background: #191920;
+overflow: hidden;
 }
 
 .phone-row input {
-  border: none;
-  flex: 1;
+border: none;
+flex: 1;
 }
 
 .country-code {
-  color: white;
-  padding-left: 12px;
-  font-size: 14px;
+color: white;
+padding-left: 12px;
+font-size: 14px;
 }
 
+.switch-method {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #ffd21f;
+  font-weight: bold;
+  margin: 10px 0 20px;
+  cursor: pointer;
+}
 
 
 
 .auth-btn {
-  margin-top: 0.5rem;
-  padding: 0.85rem;
-  background: #facc15;
-  color: #09090e;
-  font-family: "Space Mono", monospace;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
+margin-top: 0.5rem;
+padding: 0.85rem;
+background: #facc15;
+color: #09090e;
+font-family: "Space Mono", monospace;
+font-size: 0.8rem;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.1em;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+transition: background 0.2s, transform 0.15s;
 }
 
 .auth-btn:hover {
-  background: #fde047;
-  transform: translateY(-1px);
+background: #fde047;
+transform: translateY(-1px);
 }
 
 .auth-btn:active {
-  transform: translateY(0);
+transform: translateY(0);
 }
 
 .forgot-password {
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: rgba(240, 236, 228, 0.35);
+text-align: center;
+cursor: pointer;
+transition: all 0.3s ease;
+color: rgba(240, 236, 228, 0.35);
 }
 
 .forgot-password:hover {
-  color: #ffd21f;
-  transform: translateY(-2px);
+color: #ffd21f;
+transform: translateY(-2px);
 }
 
 .auth-switch {
-  font-family: "Lora", serif;
-  font-size: 0.85rem;
-  color: rgba(240, 236, 228, 0.35);
-  text-align: center;
-  margin-top: 0.5rem;
-  font-style: italic;
+font-family: "Lora", serif;
+font-size: 0.85rem;
+color: rgba(240, 236, 228, 0.35);
+text-align: center;
+margin-top: 0.5rem;
+font-style: italic;
 }
 
 .auth-switch a {
-  color: #facc15;
-  text-decoration: none;
-  font-style: normal;
+color: #facc15;
+text-decoration: none;
+font-style: normal;
 }
 
 .auth-switch a:hover {
-  text-decoration: underline;
+text-decoration: underline;
 }
 
 .form-transition {
