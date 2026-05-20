@@ -132,7 +132,7 @@ function MainPage() {
                 <button className="btn-logout" onClick={handleLogout}>Logout</button>
               </>
             ) : (
-              <a href="/login" className="btn-add">Login to Add Movies</a>
+              <p className="login-to-add-text">Login to add movies</p>
             )}
           </div>
         </div>

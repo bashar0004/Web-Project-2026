@@ -308,3 +308,18 @@
 @media (max-width: 400px) {
   .movie-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Login Text Instead of Button ── */
+.login-to-add-text {
+  margin: 0;
+  font-family: "Space Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #facc15ab;
+  opacity: 0.85;
+  text-align: center;
+  cursor: default;
+
+}
