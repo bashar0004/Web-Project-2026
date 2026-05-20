@@ -1,4 +1,3 @@
-import React from "react";
 import "./MovieCard.css";
 
 const genreColors = {
@@ -12,29 +11,26 @@ const genreColors = {
 };
 
 function StarRating({ rating }) {
-  const stars = Math.round(rating / 2); // out of 5
+  const stars = Math.round(rating / 2);
   return (
     <div className="stars">
       {[1, 2, 3, 4, 5].map((s) => (
-        <span key={s} className={s <= stars ? "star filled" : "star"}>
-          ★
-        </span>
+        <span key={s} className={s <= stars ? "star filled" : "star"}>★</span>
       ))}
-      <span className="rating-num">{rating.toFixed(1)}</span>
+      <span className="rating-num">{Number(rating).toFixed(1)}</span>
     </div>
   );
 }
 
-function MovieCard({ movie }) {
+function MovieCard({ movie, currentUserId, onEdit, onDelete }) {
   const accentColor = genreColors[movie.genre] || "#ffffff";
+  const isOwner = currentUserId && movie.createdBy &&
+    (movie.createdBy._id === currentUserId || movie.createdBy === currentUserId);
 
   return (
     <div className="movie-card" style={{ "--accent": accentColor }}>
-      {/* Poster */}
       <div className="card-poster">
         <img src={movie.poster} alt={movie.title} loading="lazy" />
-
-        {/* Hover overlay */}
         <div className="card-overlay">
           <div className="overlay-inner">
             <p className="overlay-summary">{movie.summary}</p>
@@ -45,7 +41,6 @@ function MovieCard({ movie }) {
         </div>
       </div>
 
-      {/* Card info */}
       <div className="card-info">
         <div className="card-header">
           <span className="genre-badge">{movie.genre}</span>
@@ -53,6 +48,13 @@ function MovieCard({ movie }) {
         </div>
         <h3 className="movie-title">{movie.title}</h3>
         <StarRating rating={movie.rating} />
+
+        {isOwner && (
+          <div className="card-actions">
+            <button className="card-btn edit" onClick={() => onEdit(movie)}>✏️ Edit</button>
+            <button className="card-btn delete" onClick={() => onDelete(movie._id)}>🗑️ Delete</button>
+          </div>
+        )}
       </div>
     </div>
   );

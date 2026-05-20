@@ -1,26 +1,56 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./AuthPages.css";
 
+const API = import.meta.env.VITE_API_URL;
+
 function RegisterPage() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirm: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError("");
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
+
     if (form.password !== form.confirm) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
-    alert("Registration is not functional yet — coming soon!");
+
+    setLoading(true);
+
+    try {
+      const res = await fetch(`${API}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Registration failed");
+        return;
+      }
+
+      navigate("/");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -29,6 +59,8 @@ function RegisterPage() {
         <div className="auth-logo">🎬 CineRate</div>
         <h2 className="auth-title">Create Account</h2>
         <p className="auth-sub">Join CineRate today</p>
+
+        {error && <div className="auth-error">{error}</div>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -79,7 +111,9 @@ function RegisterPage() {
             />
           </div>
 
-          <button type="submit" className="auth-btn">Create Account</button>
+          <button type="submit" className="auth-btn" disabled={loading}>
+            {loading ? "Creating account..." : "Create Account"}
+          </button>
         </form>
 
         <p className="auth-switch">

@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import MovieCard from "../components/MovieCard";
-import movies from "../data/movies";
 import "./MainPage.css";
+
+const API = import.meta.env.VITE_API_URL;
 
 const GENRES = ["All", "Sci-Fi", "Action", "Crime", "Drama", "Thriller", "Horror", "Animation"];
 
@@ -15,66 +16,179 @@ const SORT_OPTIONS = [
 ];
 
 function MainPage() {
+  const [movies, setMovies] = useState([]);
   const [search, setSearch] = useState("");
   const [genre, setGenre] = useState("All");
   const [sortBy, setSortBy] = useState("rating-desc");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [user, setUser] = useState(null);
 
-  // Combined filter + sort — both applied simultaneously
-  const displayedMovies = useMemo(() => {
-    let result = [...movies];
+  // Add movie form
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "", director: "", genre: "Action", year: "", rating: "", poster: "", summary: ""
+  });
+  const [editingId, setEditingId] = useState(null);
+  const [formError, setFormError] = useState("");
 
-    // 1. Filter by search query
-    const query = search.toLowerCase().trim();
-    if (query) {
-      result = result.filter(
-        (m) =>
-          m.title.toLowerCase().includes(query) ||
-          m.director.toLowerCase().includes(query)
-      );
+  // Check if user is logged in
+  useEffect(() => {
+    fetch(`${API}/auth/me`, { credentials: "include" })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data) setUser(data.user); })
+      .catch(() => {});
+  }, []);
+
+  // Fetch movies from backend
+  const fetchMovies = useCallback(async () => {
+    setLoading(true);
+    setError("");
+    try {
+      const params = new URLSearchParams();
+      if (search) params.append("search", search);
+      if (genre !== "All") params.append("genre", genre);
+      if (sortBy) params.append("sort", sortBy);
+
+      const res = await fetch(`${API}/movies?${params}`, { credentials: "include" });
+      const data = await res.json();
+      setMovies(data);
+    } catch (err) {
+      setError("Failed to load movies. Please try again.");
+    } finally {
+      setLoading(false);
     }
-
-    // 2. Filter by genre
-    if (genre !== "All") {
-      result = result.filter((m) => m.genre === genre);
-    }
-
-    // 3. Sort
-    const [key, dir] = sortBy.split("-");
-    result.sort((a, b) => {
-      let valA = a[key];
-      let valB = b[key];
-      if (key === "title") {
-        valA = valA.toLowerCase();
-        valB = valB.toLowerCase();
-      }
-      if (valA < valB) return dir === "asc" ? -1 : 1;
-      if (valA > valB) return dir === "asc" ? 1 : -1;
-      return 0;
-    });
-
-    return result;
   }, [search, genre, sortBy]);
+
+  useEffect(() => {
+    const timer = setTimeout(fetchMovies, 300);
+    return () => clearTimeout(timer);
+  }, [fetchMovies]);
+
+  // Handle logout
+  async function handleLogout() {
+    await fetch(`${API}/auth/logout`, { method: "POST", credentials: "include" });
+    setUser(null);
+  }
+
+  // Handle form submit (add or edit)
+  async function handleFormSubmit(e) {
+    e.preventDefault();
+    setFormError("");
+
+    const method = editingId ? "PUT" : "POST";
+    const url = editingId ? `${API}/movies/${editingId}` : `${API}/movies`;
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (!res.ok) { setFormError(data.message || "Failed"); return; }
+
+      setShowForm(false);
+      setEditingId(null);
+      setFormData({ title: "", director: "", genre: "Action", year: "", rating: "", poster: "", summary: "" });
+      fetchMovies();
+    } catch {
+      setFormError("Something went wrong.");
+    }
+  }
+
+  // Handle delete
+  async function handleDelete(id) {
+    if (!window.confirm("Delete this movie?")) return;
+    await fetch(`${API}/movies/${id}`, { method: "DELETE", credentials: "include" });
+    fetchMovies();
+  }
+
+  // Handle edit click
+  function handleEdit(movie) {
+    setEditingId(movie._id);
+    setFormData({
+      title: movie.title, director: movie.director, genre: movie.genre,
+      year: movie.year, rating: movie.rating, poster: movie.poster, summary: movie.summary
+    });
+    setShowForm(true);
+  }
 
   return (
     <div className="main-page">
-      {/* Hero Banner */}
+      {/* Hero */}
       <header className="hero">
         <div className="hero-bg" />
         <div className="hero-content">
-        
-          <h1 className="hero-title">
-            Find Your Next<br />
-            <span className="hero-accent">Favourite Film</span>
-          </h1>
-          <p className="hero-sub">
-          
-          </p>
+          <p className="hero-eyebrow">🎬 Curated Cinema</p>
+          <h1 className="hero-title">Find Your Next<br /><span className="hero-accent">Favourite Film</span></h1>
+          <p className="hero-sub">Explore movies — filter, search, and discover.</p>
+          <div className="hero-actions">
+            {user ? (
+              <>
+                <span className="user-greeting">👋 {user.name}</span>
+                <button className="btn-add" onClick={() => { setShowForm(true); setEditingId(null); }}>+ Add Movie</button>
+                <button className="btn-logout" onClick={handleLogout}>Logout</button>
+              </>
+            ) : (
+              <a href="/login" className="btn-add">Login to Add Movies</a>
+            )}
+          </div>
         </div>
       </header>
 
+      {/* Add/Edit Form */}
+      {showForm && (
+        <div className="modal-overlay">
+          <div className="modal-card">
+            <h3>{editingId ? "Edit Movie" : "Add New Movie"}</h3>
+            {formError && <div className="auth-error">{formError}</div>}
+            <form className="auth-form" onSubmit={handleFormSubmit}>
+              {[
+                { name: "title", label: "Title", type: "text", placeholder: "Inception" },
+                { name: "director", label: "Director", type: "text", placeholder: "Christopher Nolan" },
+                { name: "year", label: "Year", type: "number", placeholder: "2010" },
+                { name: "rating", label: "Rating (0-10)", type: "number", placeholder: "8.8" },
+                { name: "poster", label: "Poster URL", type: "text", placeholder: "https://..." },
+                { name: "summary", label: "Summary", type: "text", placeholder: "Brief description..." },
+              ].map(f => (
+                <div className="form-group" key={f.name}>
+                  <label>{f.label}</label>
+                  <input
+                    type={f.type}
+                    placeholder={f.placeholder}
+                    value={formData[f.name]}
+                    onChange={e => setFormData({ ...formData, [f.name]: e.target.value })}
+                    required
+                    step={f.name === "rating" ? "0.1" : undefined}
+                  />
+                </div>
+              ))}
+              <div className="form-group">
+                <label>Genre</label>
+                <select
+                  className="sort-select"
+                  value={formData.genre}
+                  onChange={e => setFormData({ ...formData, genre: e.target.value })}
+                >
+                  {GENRES.filter(g => g !== "All").map(g => (
+                    <option key={g} value={g}>{g}</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ display: "flex", gap: "0.8rem" }}>
+                <button type="submit" className="auth-btn">{editingId ? "Save Changes" : "Add Movie"}</button>
+                <button type="button" className="btn-logout" onClick={() => setShowForm(false)}>Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Controls */}
       <section className="controls-bar">
-        {/* Search */}
         <div className="search-wrap">
           <span className="search-icon">🔍</span>
           <input
@@ -84,24 +198,12 @@ function MainPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          {search && (
-            <button className="search-clear" onClick={() => setSearch("")}>
-              ✕
-            </button>
-          )}
+          {search && <button className="search-clear" onClick={() => setSearch("")}>✕</button>}
         </div>
-
-        {/* Sort */}
         <div className="select-wrap">
-          <select
-            className="sort-select"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
+          <select className="sort-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
             {SORT_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
             ))}
           </select>
         </div>
@@ -110,46 +212,39 @@ function MainPage() {
       {/* Genre Pills */}
       <section className="genre-pills">
         {GENRES.map((g) => (
-          <button
-            key={g}
-            className={`pill ${genre === g ? "pill-active" : ""}`}
-            onClick={() => setGenre(g)}
-          >
+          <button key={g} className={`pill ${genre === g ? "pill-active" : ""}`} onClick={() => setGenre(g)}>
             {g}
           </button>
         ))}
       </section>
 
-      {/* Results count */}
+      {/* Results */}
       <div className="results-meta">
-        {displayedMovies.length === 0 ? (
-          <span>No movies match your search.</span>
-        ) : (
-          <span>
-            Showing <strong>{displayedMovies.length}</strong> movie
-            {displayedMovies.length !== 1 ? "s" : ""}
-          </span>
+        {loading ? <span>Loading movies...</span> : error ? <span style={{ color: "#f87171" }}>{error}</span> : (
+          <span>Showing <strong>{movies.length}</strong> movie{movies.length !== 1 ? "s" : ""}</span>
         )}
       </div>
 
       {/* Movie Grid */}
-      {displayedMovies.length > 0 ? (
+      {!loading && !error && movies.length > 0 && (
         <section className="movie-grid">
-          {displayedMovies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
+          {movies.map((movie) => (
+            <MovieCard
+              key={movie._id}
+              movie={movie}
+              currentUserId={user?.id}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
           ))}
         </section>
-      ) : (
+      )}
+
+      {!loading && !error && movies.length === 0 && (
         <div className="empty-state">
           <p className="empty-icon">🎞️</p>
-          <p>No movies found. Try a different search or genre.</p>
-          <button
-            className="pill pill-active"
-            onClick={() => {
-              setSearch("");
-              setGenre("All");
-            }}
-          >
+          <p>No movies found.</p>
+          <button className="pill pill-active" onClick={() => { setSearch(""); setGenre("All"); }}>
             Reset Filters
           </button>
         </div>
