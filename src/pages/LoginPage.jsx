@@ -118,3 +118,4 @@ Don't have an account? <Link to="/register">Register here</Link>
 </div>
 );
 }
+export default LoginPage;
