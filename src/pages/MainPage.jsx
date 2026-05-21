@@ -33,31 +33,10 @@ function MainPage() {
   const [formError, setFormError] = useState("");
 
   // Check if user is logged in
- useEffect(() => {
-  async function checkLogin() {
-    try {
-      const res = await fetch(`${API}/auth/me`, {
-        credentials: "include",
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        localStorage.removeItem("user");
-        setUser(null);
-        return;
-      }
-
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user);
-    } catch (err) {
-      localStorage.removeItem("user");
-      setUser(null);
-    }
-  }
-
-  checkLogin();
-}, []);
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) setUser(JSON.parse(stored));
+  }, []);
 
   // Fetch movies from backend
   const fetchMovies = useCallback(async () => {
@@ -108,19 +87,7 @@ function MainPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) {
-  if (res.status === 401) {
-    localStorage.removeItem("user");
-    setUser(null);
-    setShowForm(false);
-    setFormError("");
-    alert("Your login session expired. Please login again.");
-    return;
-  }
-
-  setFormError(data.message || "Failed");
-  return;
-}
+      if (!res.ok) { setFormError(data.message || "Failed"); return; }
 
       setShowForm(false);
       setEditingId(null);
