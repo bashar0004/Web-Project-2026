@@ -5,7 +5,14 @@ import "./AuthPages.css";
 const API = import.meta.env.VITE_API_URL;
 
 function RegisterPage() {
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirm: "",
+  });
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -13,6 +20,16 @@ function RegisterPage() {
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
+  }
+
+  function formatPhoneForBackend(phone) {
+    const cleaned = phone.replace(/\s+/g, "").replace(/-/g, "");
+
+    if (cleaned.startsWith("+962")) return `0${cleaned.slice(4)}`;
+    if (cleaned.startsWith("962")) return `0${cleaned.slice(3)}`;
+    if (cleaned.startsWith("7")) return `0${cleaned}`;
+
+    return cleaned;
   }
 
   async function handleSubmit(e) {
@@ -24,6 +41,18 @@ function RegisterPage() {
       return;
     }
 
+    if (form.password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
+
+    const formattedPhone = formatPhoneForBackend(form.phone);
+
+    if (!/^07\d{8}$/.test(formattedPhone)) {
+      setError("Please enter a valid Jordanian phone number.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -32,8 +61,9 @@ function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
-          name: form.name,
-          email: form.email,
+          name: form.name.trim(),
+          email: form.email.trim().toLowerCase(),
+          phone: formattedPhone,
           password: form.password,
         }),
       });
@@ -46,7 +76,7 @@ function RegisterPage() {
       }
 
       localStorage.setItem("user", JSON.stringify(data.user));
-navigate("/");
+      navigate("/");
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -58,6 +88,7 @@ navigate("/");
     <div className="auth-page">
       <div className="auth-card">
         <div className="auth-logo">🎬 CineRate</div>
+
         <h2 className="auth-title">Create Account</h2>
         <p className="auth-sub">Join CineRate today</p>
 
@@ -89,6 +120,21 @@ navigate("/");
           </div>
 
           <div className="form-group">
+            <label>Phone Number</label>
+            <div className="phone-row">
+              <span className="country-code">🇯🇴 +962</span>
+              <input
+                type="tel"
+                name="phone"
+                placeholder="7X XXX XXXX"
+                value={form.phone}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
             <label>Password</label>
             <input
               type="password"
@@ -96,6 +142,7 @@ navigate("/");
               placeholder="••••••••"
               value={form.password}
               onChange={handleChange}
+              minLength={8}
               required
             />
           </div>

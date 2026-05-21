@@ -110,23 +110,39 @@ box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.08);
 }
 
 .phone-row {
-display: flex;
-align-items: center;
-border: 1px solid #d3b83f;
-border-radius: 8px;
-background: #191920;
-overflow: hidden;
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.25s, box-shadow 0.25s;
 }
 
-.phone-row input {
-border: none;
-flex: 1;
+.phone-row:focus-within {
+  border-color: rgba(250, 204, 21, 0.5);
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.08);
 }
 
 .country-code {
-color: white;
-padding-left: 12px;
-font-size: 14px;
+  padding: 0 0.9rem;
+  color: rgba(240, 236, 228, 0.75);
+  font-family: "Space Mono", monospace;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.phone-row input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.phone-row input:focus {
+  border: none;
+  box-shadow: none;
 }
 
 .switch-method {
