@@ -2,6 +2,15 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 
+// Helpers
+
+/**
+ * Normalizes a phone number to the local Jordanian format (0XXXXXXXXX).
+ * Strips whitespace, dashes, and handles +962 / 962 prefixes.
+ *
+ * @param {string} phone - Raw phone input from the user
+ * @returns {string} Normalized phone number, or empty string if falsy
+ */
 function normalizePhone(phone) {
   if (!phone) return "";
 
@@ -18,26 +27,34 @@ function normalizePhone(phone) {
   return cleaned;
 }
 
+// ---------------------------------------------------------------------------
+// Auth Routes
+// ---------------------------------------------------------------------------
+
 // POST /api/auth/register
 router.post("/register", async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
 
+    // --- Normalize inputs ---
     const normalizedEmail = email?.toLowerCase().trim();
     const normalizedPhone = normalizePhone(phone);
 
+    // --- Validate required fields ---
     if (!name || !normalizedEmail || !normalizedPhone || !password) {
       return res.status(400).json({
         message: "Name, email, phone, and password are required",
       });
     }
 
+    // --- Validate password strength ---
     if (password.length < 8) {
       return res.status(400).json({
         message: "Password must be at least 8 characters",
       });
     }
 
+    // --- Check for duplicate email or phone ---
     const existingUser = await User.findOne({
       $or: [{ email: normalizedEmail }, { phone: normalizedPhone }],
     });
@@ -48,6 +65,7 @@ router.post("/register", async (req, res) => {
       });
     }
 
+    // --- Create user & initialize session ---
     const user = await User.create({
       name: name.trim(),
       email: normalizedEmail,
@@ -87,9 +105,7 @@ router.post("/login", async (req, res) => {
     }
 
     const user = await User.findOne(
-      normalizedEmail
-        ? { email: normalizedEmail }
-        : { phone: normalizedPhone }
+      normalizedEmail ? { email: normalizedEmail } : { phone: normalizedPhone },
     );
 
     if (!user) {
@@ -143,7 +159,7 @@ router.get("/me", async (req, res) => {
     }
 
     const user = await User.findById(req.session.userId).select(
-      "name email phone"
+      "name email phone",
     );
 
     if (!user) {
