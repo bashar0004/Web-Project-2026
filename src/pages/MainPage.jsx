@@ -49,30 +49,9 @@ function MainPage() {
   const [editingId, setEditingId] = useState(null);
   const [formError, setFormError] = useState("");
 
-  useEffect(() => {
-    async function checkLogin() {
-      try {
-        const res = await fetch(`${API}/auth/me`, {
-          credentials: "include",
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          localStorage.removeItem("user");
-          setUser(null);
-          return;
-        }
-
-        localStorage.setItem("user", JSON.stringify(data.user));
-        setUser(data.user);
-      } catch (err) {
-        localStorage.removeItem("user");
-        setUser(null);
-      }
-    }
-
-    checkLogin();
+ useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) setUser(JSON.parse(stored));
   }, []);
 
   const fetchMovies = useCallback(async () => {
