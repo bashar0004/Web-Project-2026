@@ -86,7 +86,7 @@ router.post("/register", async (req, res) => {
       password,
     });
 
-    req.session.userId = user._id;
+    req.userId = user._id;
     req.session.userName = user.name;
 
     return res.status(201).json({
@@ -153,7 +153,7 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    req.session.userId = user._id;
+    req.userId = user._id;
     req.session.userName = user.name;
 
     return res.json({
@@ -192,13 +192,13 @@ router.post("/logout", (req, res) => {
 // GET /api/auth/me
 router.get("/me", async (req, res) => {
   try {
-    if (!req.session.userId) {
+    if (!req.userId) {
       return res.status(401).json({
         message: "Not logged in",
       });
     }
 
-    const user = await User.findById(req.session.userId).select(
+    const user = await User.findById(req.userId).select(
       "name email phone"
     );
 

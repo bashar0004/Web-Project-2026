@@ -3,7 +3,7 @@ const router = express.Router();
 const Movie = require("../models/Movie");
 
 function requireAuth(req, res, next) {
-  const userId = req.session.userId || req.body.userId || req.headers['x-user-id'];
+  const userId = req.userId || req.body.userId || req.headers['x-user-id'];
   if (!userId)
     return res.status(401).json({ message: "You must be logged in" });
   req.userId = userId;
