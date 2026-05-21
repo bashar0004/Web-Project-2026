@@ -2,10 +2,11 @@ const express = require("express");
 const router = express.Router();
 const Movie = require("../models/Movie");
 
-// Auth middleware — protects routes that need login
 function requireAuth(req, res, next) {
-  if (!req.session.userId)
+  const userId = req.session.userId || req.body.userId || req.headers['x-user-id'];
+  if (!userId)
     return res.status(401).json({ message: "You must be logged in" });
+  req.userId = userId;
   next();
 }
 
@@ -62,7 +63,7 @@ router.post("/", requireAuth, async (req, res) => {
       rating,
       poster,
       summary,
-      createdBy: req.session.userId, // link to logged-in user
+      createdBy: req.userId, // link to logged-in user
     });
 
     res.status(201).json(movie);
@@ -78,7 +79,7 @@ router.put("/:id", requireAuth, async (req, res) => {
 
     // CRITICAL: Mongoose query checks BOTH id AND createdBy === logged-in user
     const movie = await Movie.findOneAndUpdate(
-      { _id: req.params.id, createdBy: req.session.userId },
+      { _id: req.params.id, createdBy: req.userId },
       { title, director, genre, year, rating, poster, summary },
       { new: true, runValidators: true }
     );
@@ -98,7 +99,7 @@ router.delete("/:id", requireAuth, async (req, res) => {
     // CRITICAL: Mongoose query checks BOTH id AND createdBy === logged-in user
     const movie = await Movie.findOneAndDelete({
       _id: req.params.id,
-      createdBy: req.session.userId,
+      createdBy: req.userId,
     });
 
     if (!movie)

@@ -123,7 +123,7 @@ function MainPage() {
         method,
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, userId: user?.id }),
       });
 
       const data = await res.json();
@@ -154,10 +154,12 @@ function MainPage() {
     if (!window.confirm("Delete this movie?")) return;
 
     try {
-      const res = await fetch(`${API}/movies/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+     const res = await fetch(`${API}/movies/${id}`, {
+  method: "DELETE",
+  headers: { "Content-Type": "application/json" },
+  credentials: "include",
+  body: JSON.stringify({ userId: user?.id }),
+});
 
       if (res.status === 401) {
         localStorage.removeItem("user");
